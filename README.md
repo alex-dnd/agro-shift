@@ -4,6 +4,9 @@
 
 - **Играть:** https://alex-dnd.github.io/agro-shift/
 - **Пример встраивания через iframe:** https://alex-dnd.github.io/agro-shift/embed.html
+- **Макеты экранов (Figma):** https://www.figma.com/design/rHDhhuY3YofTuV3h7HeK4Q/game?node-id=0-1
+- **Презентация:** [docs/presentation.pdf](docs/presentation.pdf)
+- **Концепция:** [docs/concept.pdf](docs/concept.pdf)
 
 ## Об игре
 
