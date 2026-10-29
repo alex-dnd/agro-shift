@@ -6,6 +6,7 @@ import {
   ACHIEVEMENTS,
   STAT_KEYS,
   getEarnedAchievements,
+  SHIFT_LENGTH,
   SHIFT_TIMES,
   STAT_LABELS,
   createGame,
@@ -21,7 +22,7 @@ import {
   type Stats,
 } from './game'
 
-type Screen = 'menu' | 'game'
+type Screen = 'splash' | 'menu' | 'game'
 
 const BEST_KEY = 'agro-shift:best'
 
@@ -164,8 +165,57 @@ function pluralEvents(n: number): string {
   return n === 1 ? 'событие' : n < 5 ? 'события' : 'событий'
 }
 
+const SPLASH_MS = 2400
+
+// Заставка: пара секунд перед меню, пропускается кликом или клавишей
+function Splash({ onDone }: { onDone: () => void }) {
+  const [start] = useState(() => createGame())
+
+  useEffect(() => {
+    const timer = setTimeout(onDone, SPLASH_MS)
+    const skip = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') onDone()
+    }
+    window.addEventListener('keydown', skip)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('keydown', skip)
+    }
+  }, [onDone])
+
+  return (
+    <main className="app splash" onClick={onDone} role="button" tabIndex={0} aria-label="Пропустить заставку">
+      <div className="splash-head">
+        <svg className="splash-logo" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#14201a" stroke="#2a3b31" />
+          <path d="M12 50h40" stroke="#3d5a46" strokeWidth="4" strokeLinecap="round" />
+          <path d="M32 50V22" stroke="#6fcf6f" strokeWidth="4" strokeLinecap="round" />
+          <path d="M32 34c-8 0-13-5-13-12 8 0 13 5 13 12zM32 28c0-8 5-13 13-13 0 8-5 13-13 13z" fill="#6fcf6f" />
+        </svg>
+        <p className="eyebrow">Цифровая ферма · дежурство</p>
+        <h1>Пятница. Релиз. Урожай</h1>
+        <p className="splash-time">ПТ 16:00 · до отгрузки 2 ч</p>
+        <p className="splash-loading">Загружаем смену…</p>
+        <div className="splash-bar">
+          <div className="splash-fill" style={{ animationDuration: `${SPLASH_MS}ms` }} />
+        </div>
+        <p className="splash-hint">Нажми, чтобы принять смену</p>
+      </div>
+      <FarmMap
+        stats={start.stats}
+        incidentZone={null}
+        engineerZone={null}
+        loaded={0}
+        totalLoads={SHIFT_LENGTH}
+        scars={[]}
+        eventId={null}
+      />
+    </main>
+  )
+}
+
 function App() {
-  const [screen, setScreen] = useState<Screen>('menu')
+  const [screen, setScreen] = useState<Screen>('splash')
   const [game, setGame] = useState(() => createGame())
   const [best, setBest] = useState<number | null>(loadBest)
   const [showRules, setShowRules] = useState(false)
@@ -217,6 +267,10 @@ function App() {
     setScreen('game')
   }
 
+  if (screen === 'splash') {
+    return <Splash onDone={() => setScreen('menu')} />
+  }
+
   if (screen === 'menu') {
     return (
       <main className="app">
@@ -257,6 +311,24 @@ function App() {
             {' · '}
             Достижения: {unlocked.length} из {ACHIEVEMENTS.length}
           </p>
+        </section>
+
+        <section className="card">
+          <h2 className="section-title">Достижения</h2>
+          <ul className="ach-list">
+            {ACHIEVEMENTS.map((a) => {
+              const open = unlocked.includes(a.id)
+              return (
+                <li key={a.id} className={open ? 'ach open' : 'ach'}>
+                  <span className="ach-dot" aria-hidden="true" />
+                  <span>
+                    <strong>{a.title}</strong>
+                    <small>{a.text}</small>
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
         </section>
       </main>
     )

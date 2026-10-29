@@ -311,3 +311,48 @@ h3 { margin: 20px 0 10px; font-size: 17px; }
   .speaker-figure { width: 56px; }
   .bubble { font-size: 14px; }
 }
+
+/* Заставка */
+.splash { cursor: pointer; min-height: 100vh; justify-content: center; }
+.splash-head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.splash-logo { width: 64px; height: 64px; margin-bottom: 12px; }
+.splash h1 { font-size: clamp(30px, 6vw, 48px); margin: 4px 0 12px; line-height: 1.1; }
+.splash-time {
+  margin: 0 0 20px;
+  padding: 6px 16px;
+  border: 1px solid #f0b54a;
+  border-radius: 99px;
+  background: #2b2416;
+  color: #f0b54a;
+  font-size: 14px;
+  font-weight: 600;
+}
+.splash-loading { margin: 0 0 8px; color: #b8c7bd; font-size: 14px; }
+.splash-bar { width: min(300px, 80%); height: 6px; background: #26352c; border-radius: 99px; overflow: hidden; }
+.splash-fill { height: 100%; width: 100%; background: #6cc56c; transform-origin: left; animation: splash-load linear forwards; }
+@keyframes splash-load { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.splash-hint { margin: 16px 0 8px; color: #e8f0ea; opacity: 0.7; font-size: 15px; }
+.splash .splash-head > * { animation: toast-in 0.5s ease-out both; }
+
+/* Достижения в меню */
+.section-title { margin: 0 0 12px; font-size: 20px; }
+.ach-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ach {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid #334a3d;
+  border-radius: 10px;
+  background: #1d2b23;
+  color: #6f8076;
+}
+.ach strong { display: block; font-size: 15px; font-weight: 600; }
+.ach small { display: block; font-size: 13px; margin-top: 2px; }
+.ach-dot { flex: none; width: 14px; height: 14px; margin-top: 3px; border-radius: 50%; background: #334a3d; }
+.ach.open { border-color: #f0b54a; background: #2b2416; color: #d9cdb4; }
+.ach.open strong { color: #e8f0ea; }
+.ach.open .ach-dot { background: #f0b54a; }
+@media (max-width: 560px) {
+  .ach-list { grid-template-columns: 1fr; }
+}
